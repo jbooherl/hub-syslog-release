@@ -1,0 +1,5 @@
+check process hub_syslog
+  with pidfile /var/vcap/sys/run/hub_syslog/hub_syslog.pid
+  start program "/var/vcap/jobs/hub_syslog/bin/hub_syslog_ctl start"
+  stop program "/var/vcap/jobs/hub_syslog/bin/hub_syslog_ctl stop"
+  group vcap

@@ -1,8 +1,0 @@
----
-name: blackbox
-dependencies:
-- golang-1.21-linux
-files:
-- blackbox/**/*
-excluded_files:
-- blackbox/.git

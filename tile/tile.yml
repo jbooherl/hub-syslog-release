@@ -1,0 +1,27 @@
+---
+name: hub-syslog-config
+icon_image: $( icon )
+label: Hub Platform Syslog Config
+description: Hub Platform Syslog Config
+
+metadata_version: "2.10"
+rank: 2
+
+minimum_version_for_upgrade: "0.0.0"
+product_version: $( version )
+
+requires_product_versions:
+  - name: cf
+    version: '>= 2.11'
+
+runtime_configs:
+  - $( runtime_config "hub-syslog-config" )
+
+releases:
+  - $( release "hub_syslog" )
+
+stemcell_criteria:
+  os: 'ubuntu-jammy'
+  version: $( variable "stemcell_version" )
+  requires_cpi: false
+  enable_patch_security_updates: true

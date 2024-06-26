@@ -1,3 +1,0 @@
-<% unless p('syslog.migration.disabled') || !p('syslog.heuristically_filter_debug_messages') %>
-if ($msg contains " DEBUG ") then stop
-<% end %>

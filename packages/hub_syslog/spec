@@ -1,0 +1,8 @@
+---
+name: hub_syslog
+dependencies:
+- golang-1.21-linux
+files:
+- hub_syslog/**/*
+excluded_files:
+- hub_syslog/.git

@@ -1,0 +1,24 @@
+#!/bin/bash
+set -ex
+
+LOGDIR=/var/vcap/sys/log/hub_syslog
+
+mkdir -p ${LOGDIR}
+chown -R root:root ${LOGDIR}
+chmod 0755 ${LOGDIR}
+
+mkdir -p /var/vcap/data/hub_syslog/buffered
+chown -R syslog:adm /var/vcap/data/hub_syslog/buffered
+
+mkdir -p /etc/rsyslog.d
+
+# This cleans up after legacy config locations and previous starts
+rm -f /etc/rsyslog.d/*hub-release*conf
+
+cp $(dirname $0)/../config/hub-release.conf /etc/rsyslog.d/20-hub-release.conf
+chmod 0644 /etc/rsyslog.d/20-hub-release.conf
+
+cp $(dirname $0)/../config/35-hub-release-forwarding-rules.conf /etc/rsyslog.d/35-hub-release-forwarding-rules.conf
+chmod 0644 /etc/rsyslog.d/35-hub-release-forwarding-rules.conf
+
+systemctl restart rsyslog

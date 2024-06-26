@@ -1,3 +1,0 @@
-<% unless p('syslog.migration.disabled') || !p('syslog.filter_legacy_vcap_messages') %>
-if ($programname startswith "vcap.") then stop
-<% end %>

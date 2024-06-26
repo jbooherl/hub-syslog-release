@@ -1,0 +1,46 @@
+#!/bin/bash
+
+TILE_NAME=hub-syslog
+RELEASE_VERSION=${RELEASE_VERSION:-0.0.0-dev.$(date +%s)}
+STEMCELL_VERSION=${STEMCELL_VERSION:-1.44}
+
+PROJECT_DIR="$(cd "$(dirname "$0")/.."; pwd)"
+
+echo_green() {
+  GREEN='\033[0;32m'
+  CLEAR='\033[0m'
+  local message=${1}
+
+  echo -e "${GREEN}${message}${CLEAR}"
+}
+
+echo_red() {
+  RED='\033[0;31m'
+  CLEAR='\033[0m'
+  local message=${1}
+
+  echo -e "${RED}${message}${CLEAR}"
+}
+
+mkdir -p ${PROJECT_DIR}/tmp/releases
+
+echo_green "Creating p-hub-syslog release from local changes..."
+git rev-parse HEAD > sha
+bosh create-release --force --tarball=${PROJECT_DIR}/tmp/releases/hub-syslog.tgz
+
+pushd ${PROJECT_DIR}/tmp
+    echo_green $(pwd)
+    echo_green "Fetching releases for tile..."
+
+    TILE_FILE=${TILE_NAME}-${RELEASE_VERSION}.pivotal
+
+    echo_green "Baking tile $TILE_FILE"
+
+    kiln bake \
+        --version "$RELEASE_VERSION" \
+        --metadata ${PROJECT_DIR}/tile/tile.yml \
+        --icon ${PROJECT_DIR}/tile/icon.png \
+        --variable="stemcell_version=${STEMCELL_VERSION}" \
+        --runtime-configs-directory ${PROJECT_DIR}/tile/runtime_configs \
+        --output-file ${TILE_FILE}
+popd

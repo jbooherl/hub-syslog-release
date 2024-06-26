@@ -1,3 +1,3 @@
-[submodule "src/github.com/cloudfoundry/blackbox"]
-	path = src/blackbox
+[submodule "src/hub_syslog"]
+	path = src/hub_syslog
 	url = https://github.com/cloudfoundry/blackbox

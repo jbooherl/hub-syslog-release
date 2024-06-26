@@ -1,0 +1,46 @@
+#!/bin/bash
+# vim: set ft=sh
+
+set -e
+
+RUN_DIR=/var/vcap/sys/run/hub_syslog
+LOG_DIR=/var/vcap/sys/log/hub_syslog
+PIDFILE=$RUN_DIR/hub_syslog.pid
+CONFIG_FILE=/var/vcap/jobs/hub_syslog/config/hub_syslog_config.yml
+
+case $1 in
+
+  start)
+    mkdir -p $RUN_DIR
+    chown -R vcap:vcap $RUN_DIR
+
+    mkdir -p $LOG_DIR
+    chown -R root:root $LOG_DIR
+
+    echo $$ > $PIDFILE
+
+    setcap cap_dac_read_search+ep /var/vcap/packages/hub_syslog/bin/hub_syslog
+    <% if p('syslog.blackbox.limit_cpu') %>
+      export GOMAXPROCS=1
+    <% end %>
+
+    exec chpst -u syslog:vcap /var/vcap/packages/hub_syslog/bin/hub_syslog \
+      -config=$CONFIG_FILE \
+      1>>$LOG_DIR/hub_syslog.stdout.log \
+      2>>$LOG_DIR/hub_syslog.stderr.log
+
+    ;;
+
+  stop)
+    if [ -f $PIDFILE ]; then
+      kill -9 `cat $PIDFILE` || true
+      rm -f $PIDFILE
+    fi
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+
+    ;;
+
+esac

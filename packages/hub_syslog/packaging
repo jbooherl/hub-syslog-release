@@ -1,0 +1,6 @@
+set -e
+source /var/vcap/packages/golang-1.21-linux/bosh/compile.env
+export GO111MODULE=auto
+
+cd hub_syslog/cmd/blackbox
+go build -mod=vendor -o $BOSH_INSTALL_TARGET/bin/hub_syslog .
